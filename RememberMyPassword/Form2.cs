@@ -18,6 +18,8 @@ namespace RememberMyPassword
         public string kullanıcısifre="";
         public string anahtar="";
         int sayac = 0;
+        gizli gzl = new gizli();
+
         public Form2()
         {
             InitializeComponent();
@@ -47,7 +49,7 @@ namespace RememberMyPassword
                 {
                     try
                     {
-                        string encrypt = cls.sifrele(txtsifre.Text, "ka12sdq43");
+                        string encrypt = cls.sifrele(txtsifre.Text, gzl.Crypto);
                         string komut = "insert into tblsifre(platform,sifre,anahtar) values('" + txtplatform.Text + "' , '" + encrypt + "' , '"+anahtar+"' )";
                         cls.ekleme(komut);
                         listele();
@@ -128,7 +130,7 @@ namespace RememberMyPassword
                     }
                     else
                     {
-                        string encrypt = cls.sifrele(txtsifre.Text, "ka12sdq43");
+                        string encrypt = cls.sifrele(txtsifre.Text, gzl.Crypto);
                         string komut = "update tblsifre set platform='"+txtplatform.Text+"' , sifre='"+ encrypt+"' where Kimlik=" + id;
                         cls.güncel(komut);
                         listele();
@@ -154,7 +156,7 @@ namespace RememberMyPassword
                 {
                     sayac = 0;
                     timer1.Start();
-                    string decrypt = cls.coz(secilen, "ka12sdq43");
+                    string decrypt = cls.coz(secilen, gzl.Crypto);
                     lblsifre.Text = " SEÇİLEN SİFRE: " + decrypt + "  ";
                 }
             }

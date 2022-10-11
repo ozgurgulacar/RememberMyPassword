@@ -12,6 +12,7 @@ namespace RememberMyPassword
 {
     public partial class Form3 : Form
     {
+        gizli gzl = new gizli();
         public Form3()
         {
             InitializeComponent();
@@ -36,7 +37,7 @@ namespace RememberMyPassword
                     try
                     {
                         Class1 cls = new Class1();
-                        string encrypt = cls.sifrele(txtsifre.Text, "ka12sdq43");
+                        string encrypt = cls.sifrele(txtsifre.Text, gzl.Crypto);
                         string komut = "update tblkullanıcı set kullanıcıadı='" + txtadı.Text + "' , sifre='" + encrypt + "' where anahtar='"+which+"'";
                         cls.güncel(komut);
                         MessageBox.Show("Güncelleme İşlemi Başarılı", "Güncellendi", MessageBoxButtons.OK, MessageBoxIcon.Information);

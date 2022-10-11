@@ -22,9 +22,12 @@ namespace RememberMyPassword
         string emailsifre;
         bool kayıt=false;
         Class1 cls  = new Class1();
+        gizli gzl = new gizli();
         string anahtar ="";
         bool unutma=false;
         string unutmus="";
+
+
 
         public Form1()
         {
@@ -47,7 +50,7 @@ namespace RememberMyPassword
                     OleDbCommand komut = new OleDbCommand("select * from tblkullanıcı where kullanıcıadı=@ad and sifre=@sifre", baglantı);
                     komut.Parameters.AddWithValue("@ad",txtadı.Text);
                     Class1 cls = new Class1();
-                    string decrypt = cls.sifrele(txtsifre.Text, "ka12sdq43");
+                    string decrypt = cls.sifrele(txtsifre.Text, gzl.Crypto);
 
                     komut.Parameters.AddWithValue("@sifre",decrypt);
                     OleDbDataReader oku = komut.ExecuteReader();
@@ -94,10 +97,10 @@ namespace RememberMyPassword
                 client.Port = 587;
                 client.Host = "smtp.office365.com";
                 mesaj.To.Add(txtadı.Text);
-                mesaj.From = new MailAddress("RememberMyPSW@outlook.com");
+                mesaj.From = new MailAddress(gzl.Email);
                 mesaj.Subject = "Your RememberMyPassword Launch Code";
                 mesaj.Body = emailsifre;
-                client.Credentials = new System.Net.NetworkCredential("RememberMyPSW@outlook.com", "once!upon!a!t1me");
+                client.Credentials = new System.Net.NetworkCredential(gzl.Email, gzl.Password);
                 client.EnableSsl = true;
                 client.Send(mesaj);
                 unutma=false; 
@@ -117,7 +120,7 @@ namespace RememberMyPassword
                     try
                     {
                         
-                        string encrypt = cls.sifrele(txtsifre.Text, "ka12sdq43");
+                        string encrypt = cls.sifrele(txtsifre.Text, gzl.Crypto);
                         string komut = "insert into tblkullanıcı(kullanıcıadı,sifre) values('" + txtadı.Text + "' , '" + encrypt + "')";
                         cls.ekleme(komut);
                         txtadı.ReadOnly = false;
@@ -221,7 +224,7 @@ namespace RememberMyPassword
                 {
                     unutma = true;
                     string cozcen = oku["sifre"].ToString();
-                    unutmus = cls.coz(cozcen, "ka12sdq43");
+                    unutmus = cls.coz(cozcen, gzl.Crypto);
                     mesajgönder();
                     MessageBox.Show("Şifreniz Mail Adresinize Gönderildi", "GÖNDERİLDİ", MessageBoxButtons.OK);
                 }
